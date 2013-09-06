@@ -12,7 +12,7 @@
         <script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
         <h1>Group draw test</h1>
         <canvas id="drawArea"></canvas>
-        <script src="//eruant.github.io/hangout-draw/js/main.js"></script>
+        <script src="http://localhost/labs/hangout-draw/js/main.js"></script>
     </body>
 </html>
         ]]>
