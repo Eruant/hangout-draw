@@ -10,7 +10,6 @@
 <html>
     <body>
         <script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
-        <h1>Group draw test</h1>
         <canvas id="drawArea"></canvas>
         <script>
 
