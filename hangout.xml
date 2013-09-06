@@ -13,7 +13,18 @@
         <canvas id="drawArea"></canvas>
         <script>
 
+/*globals window*/
+
+/** Standard requestAnimFrame from paulirish.com, running 30 fps */
+window.requestAnimFrame = (function (callback) {
+    'use strict';
+    return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback) {
+        window.setTimeout(callback, 1000 / 30);
+    };
+}());
+
 (function (window, document) {
+    'use strict';
 
 	var app = {
         options: {
@@ -21,6 +32,58 @@
             width: 600,
             height: 400
 		},
+        pen: {
+            x: 0,
+            y: 0,
+            prevX: 0,
+            prevY: 0,
+            down: false
+        },
+        events: function () {
+            
+            this.canvas.addEventListener('mousedown', this.mouseDown.bind(this), false);
+            this.canvas.addEventListener('mouseup', this.mouseUp.bind(this), false);
+            this.canvas.addEventListener('mousemove', this.mouseMove.bind(this), false);
+        },
+        mouseDown: function (ev) {
+            this.pen.down = true;
+            ev.preventDefault();
+        },
+        mouseUp: function (ev) {
+            this.pen.down = false;
+            ev.preventDefault();
+        },
+        mouseMove: function (ev) {
+            this.pen.x = ev.clientX;
+            this.pen.y = ev.clientY;
+        },
+        update: function () {
+        },
+        draw: function () {
+            
+            var pen = this.pen,
+                ctx = this.ctx;
+
+            if (pen.down) {
+                ctx.save();
+                ctx.beginPath();
+                if (pen.prevX > 0 && pen.prevY > 0) {
+                    ctx.moveTo(pen.prevX, pen.prevY);
+                }
+                ctx.lineTo(pen.x, pen.y);
+                ctx.closePath();
+                ctx.stroke();
+                ctx.restore();
+                
+                pen.prevX = pen.x;
+                pen.prevY = pen.y;
+            }
+        },
+        loop: function () {
+            this.update();
+            this.draw();
+            window.requestAnimationFrame(this.loop.bind(this));
+        },
         init: function () {
             
             // set up the canvas
@@ -32,8 +95,8 @@
             // set up the context
             this.ctx = this.canvas.getContext('2d');
             
-            // test draw
-            this.ctx.fillRect(20, 20, 40, 40);
+            this.events();
+            this.loop();
         }
     };
         
