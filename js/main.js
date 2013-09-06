@@ -14,6 +14,7 @@ window.requestAnimFrame = (function (callback) {
 	var app = {
         options: {
             canvasID: 'drawArea',
+            clearID: 'clear',
             width: 600,
             height: 400
 		},
@@ -29,8 +30,18 @@ window.requestAnimFrame = (function (callback) {
             this.canvas.addEventListener('mousedown', this.mouseDown.bind(this), false);
             this.canvas.addEventListener('mouseup', this.mouseUp.bind(this), false);
             this.canvas.addEventListener('mousemove', this.mouseMove.bind(this), false);
+            
+            document.getElementById(this.options.clearID).addEventListener('click', this.clear.bind(this), false);
+        },
+        clear: function () {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        },
+        mousePosition: function (ev) {
+            this.pen.prevX = ev.clientX;
+            this.pen.prevY = ev.clientY;
         },
         mouseDown: function (ev) {
+            this.mousePosition(ev);
             this.pen.down = true;
             ev.preventDefault();
         },
