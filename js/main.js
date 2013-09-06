@@ -37,8 +37,8 @@ window.requestAnimFrame = (function (callback) {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         },
         mousePosition: function (ev) {
-            this.pen.prevX = ev.clientX;
-            this.pen.prevY = ev.clientY;
+            this.pen.prevX = ev.clientX - this.canvas.offsetLeft;
+            this.pen.prevY = ev.clientY - this.canvas.offsetTop;
         },
         mouseDown: function (ev) {
             this.mousePosition(ev);
@@ -50,8 +50,8 @@ window.requestAnimFrame = (function (callback) {
             ev.preventDefault();
         },
         mouseMove: function (ev) {
-            this.pen.x = ev.clientX;
-            this.pen.y = ev.clientY;
+            this.pen.x = ev.clientX - this.canvas.offsetLeft;
+            this.pen.y = ev.clientY - this.canvas.offsetTop;
         },
         update: function () {
         },
