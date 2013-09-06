@@ -1,0 +1,9 @@
+{
+  "name": "hangout-draw",
+  "version": "0.0.1",
+  "devDependencies": {
+    "grunt": "0.4.x",
+    "grunt-contrib-watch": "0.4.x",
+    "grunt-contrib-concat": "0.3.x"
+  }
+}

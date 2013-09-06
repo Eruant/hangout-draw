@@ -5,8 +5,7 @@
         <Require feature="views" />
     </ModulePrefs>
     <Content type="html">
-        <![CDATA[
-<!doctype html>
+        <![CDATA[<!doctype html>
 <html>
 	<head>
     	<style>
@@ -24,9 +23,7 @@
         <script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
         <canvas id="drawArea"></canvas>
 		<button id="clear">Clear</button>
-        <script>
-
-/*globals window*/
+        <script>/*globals window*/
 
 /** Standard requestAnimFrame from paulirish.com, running 30 fps */
 window.requestAnimFrame = (function (callback) {
@@ -54,11 +51,9 @@ window.requestAnimFrame = (function (callback) {
             down: false
         },
         events: function () {
-            
             this.canvas.addEventListener('mousedown', this.mouseDown.bind(this), false);
             this.canvas.addEventListener('mouseup', this.mouseUp.bind(this), false);
             this.canvas.addEventListener('mousemove', this.mouseMove.bind(this), false);
-            
             document.getElementById(this.options.clearID).addEventListener('click', this.clear.bind(this), false);
         },
         clear: function () {
@@ -112,7 +107,6 @@ window.requestAnimFrame = (function (callback) {
             
             // set up the canvas
             this.canvas = document.getElementById(this.options.canvasID);
-            
             this.canvas.width = this.options.width;
             this.canvas.height = this.options.height;
             
@@ -126,11 +120,8 @@ window.requestAnimFrame = (function (callback) {
         
     app.init();
 
-}(window, window.document));		
-
-		</script>
+}(window, window.document));		</script>
     </body>
-</html>
-        ]]>
+</html>        ]]>
     </Content>
 </Module>

@@ -26,11 +26,9 @@ window.requestAnimFrame = (function (callback) {
             down: false
         },
         events: function () {
-            
             this.canvas.addEventListener('mousedown', this.mouseDown.bind(this), false);
             this.canvas.addEventListener('mouseup', this.mouseUp.bind(this), false);
             this.canvas.addEventListener('mousemove', this.mouseMove.bind(this), false);
-            
             document.getElementById(this.options.clearID).addEventListener('click', this.clear.bind(this), false);
         },
         clear: function () {
@@ -84,7 +82,6 @@ window.requestAnimFrame = (function (callback) {
             
             // set up the canvas
             this.canvas = document.getElementById(this.options.canvasID);
-            
             this.canvas.width = this.options.width;
             this.canvas.height = this.options.height;
             
