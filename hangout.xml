@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+	<ModulePrefs title="Group draw text">
+    	<Require feature="rpc" />
+        <Require feature="views" />
+    </ModulePrefs>
+    <Content type="html">
+    	<![CDATA[
+<!doctype html>
+<html>
+    <body>
+		<script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
+        <h1>Group draw test</h1>
+    	<canvas id="drawArea"></canvas>
+		<script src="//localhost/labs/hangout-khl/js/main.js"></script>
+    </body>
+</html>
+		]]>
+    </Content>
+</Module>
