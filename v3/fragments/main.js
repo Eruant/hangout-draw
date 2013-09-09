@@ -81,6 +81,21 @@
             ctx.stroke();
         },
         
+        drawArrow: function (startX, startY, endX, endY) {
+            
+            var ctx = this.ctx,
+                headLen = 10,
+                angle = Math.atan2(endY - startY, endX - startX);
+            
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(endX, endY);
+            
+            ctx.lineTo(endX - headLen * Math.cos(angle - Math.PI / 6), endY - headLen * Math.sin(angle - Math.PI / 6));
+            ctx.moveTo(endX, endY);
+            ctx.lineTo(endX - headLen * Math.cos(angle + Math.PI / 6), endY - headLen * Math.sin(angle + Math.PI / 6));
+        },
+        
         drawPoint: function (x, y) {
             
             var ctx = this.ctx;
