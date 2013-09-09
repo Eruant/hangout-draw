@@ -1,6 +1,6 @@
 (function (window, document) {
 
-    var results = document.getElementsById('results');
+    var results = document.getElementById('results');
 
     results.innerHtml = 'Testing';
 
