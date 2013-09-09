@@ -1,39 +1,39 @@
 /*globals module */
 
 module.exports = function (grunt) {
-	'use strict';
+    'use strict';
 
-	grunt.initConfig({
-		pkg: grunt.file.readJSON('package.json'),
+    grunt.initConfig({
+        pkg: grunt.file.readJSON('package.json'),
         concat: {
             options: {
                 separator: ''
             },
             dist: {
                 src: [
-                    'parts/wrappertop.xml',
-                    'parts/bodytop.html',
-                    'js/main.js',
-                    'parts/bodybottom.html',
-                    'parts/wrapperbottom.xml'
+                    '<%= pkg.src %>/wrappertop.xml',
+                    '<%= pkg.src %>/bodytop.html',
+                    '<%= pkg.src %>/main.js',
+                    '<%= pkg.src %>/bodybottom.html',
+                    '<%= pkg.src %>/wrapperbottom.xml'
                 ],
                 dest: 'hangout.xml'
-			}
+            }
         },
-		watch: {
-			scripts: {
-				files: [
-					'parts/*',
+        watch: {
+            scripts: {
+                files: [
+                    'parts/*',
                     'js/*'
-				],
-				tasks: ['concat']
-			}
-		}
-	});
+                ],
+                tasks: ['concat']
+            }
+        }
+    });
 
-	grunt.loadNpmTasks('grunt-contrib-watch');
-	grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-concat');
 
-	grunt.registerTask('default', ['watch']);
+    grunt.registerTask('default', ['watch']);
 
 };

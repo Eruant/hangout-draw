@@ -1,127 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
-    <ModulePrefs title="Group draw text">
-        <Require feature="rpc" />
-        <Require feature="views" />
-    </ModulePrefs>
-    <Content type="html">
-        <![CDATA[<!doctype html>
+<ModulePrefs title="Group draw text">
+    <Require feature="rpc" />
+    <Require feature="views" />
+</ModulePrefs>
+<Content type="html">
+<![CDATA[
+<!doctype html>
 <html>
-	<head>
-    	<style>
-        	<!--
-            body {
-        		text-align: center;
-        	}
-            canvas {
-            	border: solid 1px #333;
-        	}
-            -->
-        </style>
-    </head>
-    <body>
-        <script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
-        <canvas id="drawArea"></canvas>
-		<button id="clear">Clear</button>
-        <script>/*globals window*/
-
-/** Standard requestAnimFrame from paulirish.com, running 30 fps */
-window.requestAnimFrame = (function (callback) {
-    'use strict';
-    return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback) {
-        window.setTimeout(callback, 1000 / 30);
-    };
-}());
-
+<head>
+</head>
+<body>
+<script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
+<div id="results"></div>
+<script>
 (function (window, document) {
-    'use strict';
 
-	var app = {
-        options: {
-            canvasID: 'drawArea',
-            clearID: 'clear',
-            width: 600,
-            height: 400
-		},
-        pen: {
-            x: 0,
-            y: 0,
-            prevX: 0,
-            prevY: 0,
-            down: false
-        },
-        events: function () {
-            this.canvas.addEventListener('mousedown', this.mouseDown.bind(this), false);
-            this.canvas.addEventListener('mouseup', this.mouseUp.bind(this), false);
-            this.canvas.addEventListener('mousemove', this.mouseMove.bind(this), false);
-            document.getElementById(this.options.clearID).addEventListener('click', this.clear.bind(this), false);
-        },
-        clear: function () {
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        },
-        mousePosition: function (ev) {
-            this.pen.prevX = ev.clientX - this.canvas.offsetLeft;
-            this.pen.prevY = ev.clientY - this.canvas.offsetTop;
-        },
-        mouseDown: function (ev) {
-            this.mousePosition(ev);
-            this.pen.down = true;
-            ev.preventDefault();
-        },
-        mouseUp: function (ev) {
-            this.pen.down = false;
-            ev.preventDefault();
-        },
-        mouseMove: function (ev) {
-            this.pen.x = ev.clientX - this.canvas.offsetLeft;
-            this.pen.y = ev.clientY - this.canvas.offsetTop;
-        },
-        update: function () {
-        },
-        draw: function () {
-            
-            var pen = this.pen,
-                ctx = this.ctx;
+    var results = document.getElementsById('results');
 
-            if (pen.down) {
-                ctx.save();
-                ctx.beginPath();
-                if (pen.prevX > 0 && pen.prevY > 0) {
-                    ctx.moveTo(pen.prevX, pen.prevY);
-                }
-                ctx.lineTo(pen.x, pen.y);
-                ctx.closePath();
-                ctx.stroke();
-                ctx.restore();
-                
-                pen.prevX = pen.x;
-                pen.prevY = pen.y;
-            }
-        },
-        loop: function () {
-            this.update();
-            this.draw();
-            window.requestAnimationFrame(this.loop.bind(this));
-        },
-        init: function () {
-            
-            // set up the canvas
-            this.canvas = document.getElementById(this.options.canvasID);
-            this.canvas.width = this.options.width;
-            this.canvas.height = this.options.height;
-            
-            // set up the context
-            this.ctx = this.canvas.getContext('2d');
-            
-            this.events();
-            this.loop();
-        }
-    };
-        
-    app.init();
+    results.innerHtml = 'Testing';
 
-}(window, window.document));		</script>
-    </body>
-</html>        ]]>
-    </Content>
+}(window, window.document));
+</script>
+</body>
+</html>
+]]>
+</Content>
 </Module>
