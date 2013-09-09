@@ -4,6 +4,8 @@
 
         init: function () {
 
+            console.log('Starting hangout');
+
             gapi.hangout.data.submitDelta({
                 key1: 'first key',
                 key2: 'second key'
