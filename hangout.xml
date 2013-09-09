@@ -13,6 +13,7 @@
 <body>
 <script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
 <div id="results"></div>
+<input type="text" id="input" value="" /><button id="submit">Send</button>
 <script>
 (function () {
 
@@ -30,6 +31,23 @@
             gapi.hangout.data.onStateChanged.add(function () {
                 var state = gapi.hangout.data.getState();
                 console.log(state);
+            });
+
+        },
+
+        events: function () {
+
+            var input = document.getElementById('input'),
+                btn = document.getElementById('submit'),
+                value = '';
+
+            btn.addEvent('onClick', function () {
+                console.log('Button pressed');
+                value = input.value;
+
+                gapi.hangout.data.submitDelta({
+                    inputData: value
+                });
             });
 
         }

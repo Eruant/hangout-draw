@@ -16,6 +16,23 @@
                 console.log(state);
             });
 
+        },
+
+        events: function () {
+
+            var input = document.getElementById('input'),
+                btn = document.getElementById('submit'),
+                value = '';
+
+            btn.addEvent('onClick', function () {
+                console.log('Button pressed');
+                value = input.value;
+
+                gapi.hangout.data.submitDelta({
+                    inputData: value
+                });
+            });
+
         }
 
     };
