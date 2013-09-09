@@ -123,7 +123,7 @@
             
             for (i = 0; i < linesLen; i += 1) {
                 item = this.data.lines[i];
-                this.drawLine(item[0], item[1], item[2], item[3]);
+                this.drawArrow(item[0], item[1], item[2], item[3]);
             }
             
             for (i = 0; i < pointsLen; i += 1) {
