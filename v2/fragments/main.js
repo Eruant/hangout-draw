@@ -81,7 +81,6 @@ window.requestAnimFrame = (function (callback) {
         },
         
         loop: function () {
-            this.update();
             this.draw();
             window.requestAnimationFrame(this.loop.bind(this));
         },
