@@ -9,6 +9,15 @@
 <!doctype html>
 <html>
 <head>
+    <style>
+        body {
+        	text-align: center;
+        }
+    	canvas {
+        	border: solid 1px #333;
+            cursor: crosshair;
+        }
+    </style>
 </head>
 <body>
 <script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
