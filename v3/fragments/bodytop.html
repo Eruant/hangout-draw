@@ -9,11 +9,27 @@
         	border: solid 1px #333;
             cursor: crosshair;
         }
+        .holder {
+        	position: relative;
+            width: 600px;
+            height: 400px;
+        }
+        .holder .bg {
+        	position: absolute;
+            z-index: 5;
+        }
+        #drawArea {
+            position: absolute;
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
 <script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
-<canvas id="drawArea"></canvas>
+<div class="holder">
+    <img class="bg" src="//static4.demotix.com/sites/default/files/imagecache/a_scale_large/500-3/photos/1295325875-serbia-beat-turkey-in-u20-ice-hockey-championship_559253.jpg" width="600" height="400" alt="random image">
+	<canvas id="drawArea"></canvas>
+</div><br/>
 <button id="clear">Clear</button>
 <button id="send">Send</button>
 <script>
