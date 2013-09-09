@@ -86,9 +86,10 @@
             var ctx = this.ctx;
             
             ctx.save();
+            ctx.translate(x, y);
             ctx.scale(1, 0.5);
             ctx.beginPath();
-            ctx.arc(x, y, 30, 0, Math.PI * 2, false);
+            ctx.arc(0, 0, 30, 0, Math.PI * 2, false);
             ctx.closePath();
             ctx.stroke();
             ctx.restore();
