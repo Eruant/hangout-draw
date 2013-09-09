@@ -1,21 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<Module>
-<ModulePrefs title="Group draw text">
-    <Require feature="rpc" />
-    <Require feature="views" />
-</ModulePrefs>
-<Content type="html">
-<![CDATA[
-<!doctype html>
-<html>
-<head>
-</head>
-<body>
-<script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
-<canvas id="drawArea"></canvas>
-<button id="clear">Clear</button>
-<button id="send">Send</button>
-<script>
 /*globals window, gapi*/
 (function (document) {
     'use strict';
@@ -159,9 +141,4 @@
     });
 
 
-}(window.document));</script>
-</body>
-</html>
-]]>
-</Content>
-</Module>
+}(window.document));
