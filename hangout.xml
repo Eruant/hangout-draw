@@ -156,22 +156,53 @@
             }, false);
             
             document.getElementById(this.options.sendID).addEventListener('click', function () {
+                
+                var lines = me.data.lines,
+                    linesLen = lines.length,
+                    i,
+                    linesStr = '';
+                
+                for (i = 0; i < linesLen; i += 1) {
+                    if (i !== 0) {
+                        linesStr += '|';
+                    }
+                    
+                    linesStr += lines[i].join(',');
+                }
+                
+                console.log(linesStr);
+                
                 gapi.hangout.data.submitDelta({
-                    lines: me.data.lines.join(','),
-                    points: me.data.points.join(',')
+                    lines: linesStr,
+                    points: "20,30|40,50|100,50"
                 });
             }, false);
             
             // listen out for when the shared object changes
             gapi.hangout.data.onStateChanged.add(function () {
-                var state = gapi.hangout.data.getState();
+                var state = gapi.hangout.data.getState(),
+                    linesArray = state.lines.split('|'),
+                    len = linesArray.length,
+                    pointsArray = state.points.split('|'),
+                    i,
+                    lines = [],
+                    points = [];
+                
+                for (i = 0; i < len; i += 1) {
+                    lines.push(linesArray[i].split(','));
+                }
+                
+                len = pointsArray.length;
+                for (i = 0; i < len; i += 1) {
+                    points.push(pointsArray[i].split(','));
+                }
                 
                 me.data = {
-                    lines: state.lines.split(','),
-                    points: state.points.split(',')
+                    lines: lines,
+                    points: points
                 };
                 
-                console.log('New event', me.data);
+                console.log('New data', me.data);
                 
                 me.draw();
             });
