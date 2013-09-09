@@ -68,8 +68,6 @@
             this.brush.endPosition = false;
             
             this.draw();
-            
-            console.log('New stroke', this.data);
         },
         
         drawLine: function (startX, startY, endX, endY) {
@@ -132,8 +130,11 @@
                 
                 var lines = me.data.lines,
                     linesLen = lines.length,
+                    points = me.data.points,
+                    pointsLen = points.length,
                     i,
-                    linesStr = '';
+                    linesStr = '',
+                    pointsStr = '';
                 
                 for (i = 0; i < linesLen; i += 1) {
                     if (i !== 0) {
@@ -143,11 +144,17 @@
                     linesStr += lines[i].join(',');
                 }
                 
-                console.log(linesStr);
+                for (i = 0; i < pointsLen; i += 1) {
+                    if (i !== 0) {
+                        pointsStr += '|';
+                    }
+                    
+                    pointsStr += points[i].join(',');
+                }
                 
                 gapi.hangout.data.submitDelta({
                     lines: linesStr,
-                    points: "20,30|40,50|100,50"
+                    points: pointsStr
                 });
             }, false);
             
@@ -174,8 +181,6 @@
                     lines: lines,
                     points: points
                 };
-                
-                console.log('New data', me.data);
                 
                 me.draw();
             });
