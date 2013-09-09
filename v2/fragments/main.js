@@ -16,6 +16,8 @@
                 console.log(state);
             });
 
+            this.events();
+
         },
 
         events: function () {
