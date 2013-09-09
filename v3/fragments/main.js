@@ -68,6 +68,8 @@
             this.brush.endPosition = false;
             
             this.draw();
+            
+            console.log('New stroke', this.data);
         },
         
         drawLine: function (startX, startY, endX, endY) {
@@ -141,6 +143,8 @@
                     lines: state.lines.split(','),
                     points: state.points.split(',')
                 };
+                
+                console.log('New event', me.data);
                 
                 me.draw();
             });
