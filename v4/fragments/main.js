@@ -270,7 +270,7 @@ window.requestAnimFrame = (function (callback) {
                     points: points
                 };
                 
-                me.draw();
+                //me.draw();
             });
             
         }
