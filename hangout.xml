@@ -127,7 +127,7 @@
         drawArrow: function (startX, startY, endX, endY) {
             
             var ctx = this.ctx,
-                headLen = 10,
+                headLen = 20,
                 angle = Math.atan2(endY - startY, endX - startX);
             
             ctx.beginPath();
