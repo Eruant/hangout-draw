@@ -86,7 +86,7 @@
             var ctx = this.ctx;
             
             ctx.save();
-            ctx.translate(x, y);
+            ctx.translate(x, (y * 2));
             ctx.scale(1, 0.5);
             ctx.beginPath();
             ctx.arc(0, 0, 40, 0, Math.PI * 2, false);
