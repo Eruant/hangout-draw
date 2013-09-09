@@ -86,7 +86,7 @@
             var ctx = this.ctx;
             
             ctx.beginPath();
-            ctx.arc(x, y, 15, 0, Math.PI * 2, false);
+            ctx.arc(x, y, 30, 0, Math.PI * 2, false);
             ctx.closePath();
             ctx.stroke();
         },
@@ -99,6 +99,8 @@
                 i;
             
             ctx.clearRect(0, 0, this.options.width, this.options.height);
+            ctx.strokeStyle = "#3333ff";
+            ctx.lineWidth = 3;
             
             for (i = 0; i < linesLen; i += 1) {
                 item = this.data.lines[i];
