@@ -96,7 +96,7 @@ window.requestAnimFrame = (function (callback) {
 
             btn.addEventListener('click', function () {
                 console.log('Button pressed');
-                value = me.ctx.toDataURL();
+                value = me.canvas.toDataURL();
 
                 gapi.hangout.data.submitDelta({
                     img: value
