@@ -104,7 +104,8 @@ window.requestAnimFrame = (function (callback) {
 
         events: function () {
 
-            var btn = document.getElementById('submit');
+            var me = this,
+                btn = document.getElementById('submit');
             
             this.canvas.addEventListener('mousedown', this.mouseDown.bind(this), false);
             this.canvas.addEventListener('mouseup', this.mouseUp.bind(this), false);
@@ -112,7 +113,7 @@ window.requestAnimFrame = (function (callback) {
 
             btn.addEventListener('click', function () {
                 console.log('Button pressed');
-                value = this.ctx.getImageData(0, 0, this.options.width, this.options.height);
+                value = me.ctx.getImageData(0, 0, me.options.width, me.options.height);
 
                 gapi.hangout.data.submitDelta({
                     img: value
