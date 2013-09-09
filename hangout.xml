@@ -43,14 +43,14 @@
                 btn = document.getElementById('submit'),
                 value = '';
 
-            btn.addEvent('onClick', function () {
+            btn.onclick = function () {
                 console.log('Button pressed');
                 value = input.value;
 
                 gapi.hangout.data.submitDelta({
                     inputData: value
                 });
-            });
+            };
 
         }
 
