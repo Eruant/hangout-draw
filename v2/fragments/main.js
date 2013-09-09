@@ -11,8 +11,8 @@ window.requestAnimFrame = (function (callback) {
         
         options: {
             canvasID: 'drawArea',
-            width: 600,
-            height: 400
+            width: 300,
+            height: 200
 		},
         
         pen: {
@@ -106,7 +106,8 @@ window.requestAnimFrame = (function (callback) {
             // listen out for when the shared object changes
             gapi.hangout.data.onStateChanged.add(function () {
                 var state = gapi.hangout.data.getState();
-                console.log(state);
+                me.ctx.clearRect(0, 0, me.options.width, me.options.height);
+                me.ctx.drawImage(state.img, 0, 0);
             });
 
         }
