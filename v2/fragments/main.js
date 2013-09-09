@@ -105,9 +105,14 @@ window.requestAnimFrame = (function (callback) {
             
             // listen out for when the shared object changes
             gapi.hangout.data.onStateChanged.add(function () {
-                var state = gapi.hangout.data.getState();
-                me.ctx.clearRect(0, 0, me.options.width, me.options.height);
-                me.ctx.drawImage(state.img, 0, 0);
+                var state = gapi.hangout.data.getState(),
+                    image = new Image();
+                
+                image.src = state.img;
+                image.onload = function () {
+                	me.ctx.clearRect(0, 0, me.options.width, me.options.height);
+                	me.ctx.drawImage(image, 0, 0);
+                };
             });
 
         }
