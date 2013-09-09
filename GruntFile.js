@@ -9,7 +9,7 @@ module.exports = function (grunt) {
             options: {
                 separator: ''
             },
-            dist: {
+            hangout: {
                 src: [
                     '<%= pkg.src %>/wrappertop.xml',
                     '<%= pkg.src %>/bodytop.html',
@@ -18,6 +18,14 @@ module.exports = function (grunt) {
                     '<%= pkg.src %>/wrapperbottom.xml'
                 ],
                 dest: 'hangout.xml'
+            },
+            dest: {
+                src: [
+                    '<%= pkg.src %>/bodytop.html',
+                    '<%= pkg.src %>/main.js',
+                    '<%= pkg.src %>/bodybottom.html'
+                ],
+                dest: 'test.html'
             }
         },
         watch: {

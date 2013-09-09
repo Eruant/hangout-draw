@@ -19,28 +19,28 @@
 /*globals window, gapi*/
 (function (document) {
     'use strict';
-
+    
     var app = {
         
         options: {
             canvasID: 'drawArea',
             clearID: 'clear',
             sendID: 'send',
-            width: 300,
-            height: 200
-		},
+            width: 600,
+            height: 400
+        },
         
-        pen: {
-            x: 0,
-            y: 0,
-            prevX: 0,
-            prevY: 0,
+        brush: {
+            startPosition: false,
+            endPosition: false,
             down: false
         },
         
-        paths: [],
-        markers: [],
-
+        data: {
+            lines: [],
+            points: []
+        },
+        
         init: function () {
             
             // set up the canvas
@@ -54,111 +54,126 @@
             this.events();
         },
         
-        clear: function () {
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        },
-        
-        clearPoints: function () {
-            this.paths = [];
-            this.markers = [];
-        },
-        
         mousePosition: function (ev) {
-            this.pen.prevX = ev.clientX - this.canvas.offsetLeft;
-            this.pen.prevY = ev.clientY - this.canvas.offsetTop;
+            return {
+                x: ev.clientX - this.canvas.offsetLeft,
+                y: ev.clientY - this.canvas.offsetTop
+            };
         },
         mouseDown: function (ev) {
-            this.mousePosition(ev);
-            this.pen.down = true;
+            this.brush.startPosition = this.mousePosition(ev);
+            this.brush.down = true;
             ev.preventDefault();
         },
         mouseUp: function (ev) {
-            this.pen.x = ev.clientX - this.canvas.offsetLeft;
-            this.pen.y = ev.clientY - this.canvas.offsetTop;
-            this.pen.down = false;
-            this.update();
+            this.brush.endPosition = this.mousePosition(ev);
+            this.brush.down = false;
+            this.newStroke();
             ev.preventDefault();
         },
         
-        update: function () {
+        newStroke: function () {
+            var xRange = this.brush.startPosition.x - this.brush.endPosition.x,
+                yRange = this.brush.startPosition.y - this.brush.endPosition.y,
+                range = 5;
             
-            var startX = this.pen.prevX,
-                startY = this.pen.prevY,
-                endX = this.pen.x,
-                endY = this.pen.y,
-                range = 3;
-            
-            if ((endX > startX + range || endX < startX - range) || (endY > startY + range || endY < startY - range)) {
-                this.paths.push({ start: [startX, startY], end: [endX, endY]});
+            if (xRange < range && xRange > -range && yRange < range && yRange > -range) {
+                this.data.points.push([this.brush.startPosition.x, this.brush.startPosition.y]);
             } else {
-                this.markers.push([startX, startY]);
+                this.data.lines.push([this.brush.startPosition.x, this.brush.startPosition.y, this.brush.endPosition.x, this.brush.endPosition.y]);
             }
+            this.brush.startPosition = false;
+            this.brush.endPosition = false;
+            
+            this.draw();
+        },
+        
+        drawLine: function (startX, startY, endX, endY) {
+            
+            var ctx = this.ctx;
+            
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(endX, endY);
+            ctx.closePath();
+            ctx.stroke();
+        },
+        
+        drawPoint: function (x, y) {
+            
+            var ctx = this.ctx;
+            
+            ctx.beginPath();
+            ctx.arc(x, y, 15, 0, Math.PI * 2, false);
+            ctx.closePath();
+            ctx.stroke();
         },
         
         draw: function () {
-            
             var ctx = this.ctx,
-                items,
+                linesLen = this.data.lines.length,
+                pointsLen = this.data.points.length,
                 item,
-                len,
                 i;
             
-            items = this.markers;
-            len = items.lenght;
-            for (i = 0; i < len; i += 1) {
-                
-                item = items[i];
-                
-                ctx.save();
-                ctx.translate(item[i][0], items[i][0]);
-                ctx.fillRect(0, 0, 10, 10);
-                ctx.restore();
+            ctx.clearRect(0, 0, this.options.width, this.options.height);
+            
+            for (i = 0; i < linesLen; i += 1) {
+                item = this.data.lines[i];
+                this.drawLine(item[0], item[1], item[2], item[3]);
             }
             
-            items = this.paths;
-            len = items.lenght;
-            for (i = 0; i < len; i += 1) {
-                item = items[i];
-                ctx.moveTo(item[i].start[0], item[i].start[1]);
-                ctx.lineTo(item[i].end[0], item[i].end[1]);
+            for (i = 0; i < pointsLen; i += 1) {
+                item = this.data.points[i];
+                this.drawPoint(item[0], item[1]);
             }
         },
-
+        
         events: function () {
-
-            var me = this,
-                send = document.getElementById(this.options.sendID),
-                clear = document.getElementById(this.options.clearID);
+            
+            var me = this;
             
             this.canvas.addEventListener('mousedown', this.mouseDown.bind(this), false);
             this.canvas.addEventListener('mouseup', this.mouseUp.bind(this), false);
-
-            send.addEventListener('click', function () {
-
-                gapi.hangout.data.submitDelta({
-                    img: 'data'
-                });
-            });
             
-            clear.addEventListener('click', function () {
-            });
+            document.getElementById(this.options.clearID).addEventListener('click', function () {
+                me.data = {
+                    lines: [],
+                    points: []
+                };
+                me.draw();
+            }, false);
+            
+            document.getElementById(this.options.sendID).addEventListener('click', function () {
+                gapi.hangout.data.submitDelta({
+                    lines: me.data.lines.join(','),
+                    points: me.data.points.join(',')
+                });
+            }, false);
             
             // listen out for when the shared object changes
             gapi.hangout.data.onStateChanged.add(function () {
                 var state = gapi.hangout.data.getState();
+                
+                me.data = {
+                    lines: state.lines.split(','),
+                    points: state.points.split(',')
+                };
+                
+                me.draw();
             });
-
+            
         }
-
+        
     };
-
+    
     gapi.hangout.onApiReady.add(function (eventObj) {
         if (eventObj.isApiReady) {
             app.init();
         }
     });
-
-
+    
+    
 }(window.document));</script>
 </body>
 </html>

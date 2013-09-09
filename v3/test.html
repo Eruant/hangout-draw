@@ -1,7 +1,25 @@
+<!doctype html>
+<html>
+<head>
+    <style>
+        body {
+        	text-align: center;
+        }
+    	canvas {
+        	border: solid 1px #333;
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body>
+<canvas id="drawArea"></canvas><br/>
+<button id="clear">Clear</button>
+<button id="send">Send</button>
+<script>
 /*globals window, gapi*/
 (function (document) {
     'use strict';
-    
+
     var app = {
         
         options: {
@@ -10,7 +28,7 @@
             sendID: 'send',
             width: 600,
             height: 400
-        },
+		},
         
         brush: {
             startPosition: false,
@@ -22,7 +40,7 @@
             lines: [],
             points: []
         },
-        
+
         init: function () {
             
             // set up the canvas
@@ -60,11 +78,11 @@
                 range = 5;
             
             if (xRange < range && xRange > -range && yRange < range && yRange > -range) {
-                this.data.points.push([this.brush.startPosition.x, this.brush.startPosition.y]);
+            	this.data.points.push([this.brush.startPosition.x, this.brush.startPosition.y]);
             } else {
-                this.data.lines.push([this.brush.startPosition.x, this.brush.startPosition.y, this.brush.endPosition.x, this.brush.endPosition.y]);
+            	this.data.lines.push([this.brush.startPosition.x, this.brush.startPosition.y, this.brush.endPosition.x, this.brush.endPosition.y]);
             }
-            this.brush.startPosition = false;
+        	this.brush.startPosition = false;
             this.brush.endPosition = false;
             
             this.draw();
@@ -86,7 +104,7 @@
             var ctx = this.ctx;
             
             ctx.beginPath();
-            ctx.arc(x, y, 15, 0, Math.PI * 2, false);
+            ctx.arc(x, y, 15, 0, Math.PI * 2, false); 
             ctx.closePath();
             ctx.stroke();
         },
@@ -101,7 +119,7 @@
             ctx.clearRect(0, 0, this.options.width, this.options.height);
             
             for (i = 0; i < linesLen; i += 1) {
-                item = this.data.lines[i];
+            	item = this.data.lines[i];
                 this.drawLine(item[0], item[1], item[2], item[3]);
             }
             
@@ -110,7 +128,7 @@
                 this.drawPoint(item[0], item[1]);
             }
         },
-        
+
         events: function () {
             
             var me = this;
@@ -120,40 +138,24 @@
             
             document.getElementById(this.options.clearID).addEventListener('click', function () {
                 me.data = {
-                    lines: [],
-                    points: []
-                };
+            		lines: [],
+            		points: []
+        		}
                 me.draw();
             }, false);
             
             document.getElementById(this.options.sendID).addEventListener('click', function () {
-                gapi.hangout.data.submitDelta({
-                    lines: me.data.lines.join(','),
-                    points: me.data.points.join(',')
-                });
+            	// send data to Google
             }, false);
-            
-            // listen out for when the shared object changes
-            gapi.hangout.data.onStateChanged.add(function () {
-                var state = gapi.hangout.data.getState();
-                
-                me.data = {
-                    lines: state.lines.split(','),
-                    points: state.points.split(',')
-                };
-                
-                me.draw();
-            });
-            
+
         }
-        
+
     };
-    
-    gapi.hangout.onApiReady.add(function (eventObj) {
-        if (eventObj.isApiReady) {
-            app.init();
-        }
-    });
-    
-    
+
+    app.init();
+
+
 }(window.document));
+</script>
+</body>
+</html>
