@@ -23,8 +23,7 @@ module.exports = function (grunt) {
         watch: {
             scripts: {
                 files: [
-                    'parts/*',
-                    'js/*'
+                    '<%= pkg.src %>/*'
                 ],
                 tasks: ['concat']
             }
