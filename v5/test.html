@@ -6,7 +6,7 @@
         	text-align: center;
         }
     	canvas {
-        	border: solid 1px #333;
+            background: 'rgba(255, 255, 255, 0.2)';
             cursor: crosshair;
         }
         .holder {
@@ -32,7 +32,6 @@
 </div><br/>
 <button id="clear">Clear</button>
 <button id="send">Send</button>
-<button id="play">Play</button>
 <script>
 /*globals window, gapi, YT*/
 
@@ -63,7 +62,7 @@ window.requestAnimFrame = (function (callback) {
             clearID: 'clear',
             sendID: 'send',
             width: 600,
-            height: 400,
+            height: 365,
             colors: {
                 blue: 'rgb(51, 102, 255)',
                 transparentBlue: 'rgba(51, 102, 255, 0.4)'
@@ -127,9 +126,9 @@ window.requestAnimFrame = (function (callback) {
                 me.player = new YT.Player('videoArea', {
                 	width: '600',
                     height: '400',
-                    videoId: 'Qig68IuPrbk',
+                    videoId: '6vF8tC3Hue0',
                     playerVars: {
-                    	controls: 0,
+                    	controls: 1,
                         info: 0,
                         autoplay: 0
                     },
@@ -139,18 +138,14 @@ window.requestAnimFrame = (function (callback) {
                     }
                 });
                 
-                document.getElementById("play").addEventListener('click', function () {
-                    me.player.playVideo();
-                }, false);
+                
             };
         },
         
         videoReady: function (ev) {
-            
         },
         
         videoPlay: function (ev) {
-        	me.player.playVideoAt(30);
         },
         
         videoStateChange: function (ev) {

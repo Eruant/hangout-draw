@@ -14,7 +14,6 @@
         	text-align: center;
         }
     	canvas {
-        	border: solid 1px #333;
             cursor: crosshair;
         }
         .holder {
@@ -35,7 +34,7 @@
 <body>
 <script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
 <div class="holder">
-    <iframe id="videoArea"></iframe>
+    <div id="videoArea"></div>
 	<canvas id="drawArea"></canvas>
 </div><br/>
 <button id="clear">Clear</button>
@@ -70,7 +69,7 @@ window.requestAnimFrame = (function (callback) {
             clearID: 'clear',
             sendID: 'send',
             width: 600,
-            height: 400,
+            height: 365,
             colors: {
                 blue: 'rgb(51, 102, 255)',
                 transparentBlue: 'rgba(51, 102, 255, 0.4)'
@@ -124,38 +123,40 @@ window.requestAnimFrame = (function (callback) {
         setupVideo: function () {
             var me = this,
                 firstScriptTag = document.getElementsByTagName('script')[0],
-                tag = document.createElement('script'),
-                videoConfig = {
-                    width: this.options.width,
-                    height: this.options.height,
-                    videoID: 'Qig68IuPrbk',
-                    events: {}
-                };
+                tag = document.createElement('script');
             
             // add the api to the page
-            tag.src = 'https://www.youtube.com/iframe_api';
+            tag.src = '//www.youtube.com/iframe_api';
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-            videoConfig.events.onReady = function (ev) {
-                me.videoReady(ev);
-            };
-            
-            videoConfig.events.onStateChange = function (ev) {
-                me.videoStateChange(ev);
-            };
-
             window.onYouTubeIframeAPIReady = function () {
-                me.player = new YT.Player(me.options.videoID, videoConfig);
+                me.player = new YT.Player('videoArea', {
+                    width: '600',
+                    height: '400',
+                    videoId: '6vF8tC3Hue0',
+                    playerVars: {
+                        controls: 1,
+                        info: 0,
+                        autoplay: 0
+                    },
+                    events: {
+                        'onReady': me.videoReady,
+                        'onStateChange': me.videoStateChange
+                    }
+                });
+                
+                
             };
         },
         
         videoReady: function (ev) {
-            console.log('videoReady', ev);
-            ev.target.playVideo();
+        },
+        
+        videoPlay: function (ev) {
         },
         
         videoStateChange: function (ev) {
-            console.log('videoStateChange', ev);
+            //console.log('videoStateChange', ev);
         },
         
         /**
