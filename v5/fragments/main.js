@@ -401,7 +401,7 @@ window.requestAnimFrame = (function (callback) {
                     };
                     
                     if (state.videoSeek) {
-                        me.videoSeek(parseFloat(state.videoSeek, 10));
+                        me.videoSeek(parseFloat(state.videoSeek));
                     }
                     
                 }
