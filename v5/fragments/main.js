@@ -353,7 +353,6 @@ window.requestAnimFrame = (function (callback) {
                 }
                 
                 videoSeek = String(me.player.getCurrentTime());
-                console.log('Sending', videoSeek);
                 
                 gapi.hangout.data.submitDelta({
                     lines: linesStr,
@@ -402,8 +401,7 @@ window.requestAnimFrame = (function (callback) {
                     };
                     
                     if (state.videoSeek) {
-                        console.log('received', state.videoSeek, parseInt(state.videoSeek, 10));
-                        me.videoSeek(parseInt(state.videoSeek, 10));
+                        me.videoSeek(parseFloat(state.videoSeek, 10));
                     }
                     
                 }
