@@ -110,7 +110,8 @@ window.requestAnimFrame = (function (callback) {
         videoReady: function (ev) {
         },
         
-        videoPlay: function (ev) {
+        videoSeek: function (x) {
+            this.player.pauseVideo().seekTo(x, true);
         },
         
         videoStateChange: function (ev) {
@@ -332,7 +333,8 @@ window.requestAnimFrame = (function (callback) {
                     pointsLen = points.length,
                     i,
                     linesStr = '',
-                    pointsStr = '';
+                    pointsStr = '',
+                    videoSeek = false;
                 
                 for (i = 0; i < linesLen; i += 1) {
                     if (i !== 0) {
@@ -350,10 +352,15 @@ window.requestAnimFrame = (function (callback) {
                     pointsStr += points[i].join(',');
                 }
                 
+                videoSeek = me.player.getCurrentTime();
+                
                 gapi.hangout.data.submitDelta({
                     lines: linesStr,
-                    points: pointsStr
+                    points: pointsStr,
+                    videoSeek: videoSeek
                 });
+                
+                console.log('videoseek', videoSeek);
 
             }, false);
             
