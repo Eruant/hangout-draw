@@ -304,22 +304,17 @@ window.requestAnimFrame = (function (callback) {
             
             // listen out for when the shared object changes
             gapi.hangout.data.onStateChanged.add(function () {
-                var state = gapi.hangout.data.getState(),
-                    linesArray,
-                    len,
-                    pointsArray,
-                    i,
-                    j,
-                    lines = [],
-                    points = [],
-                    items,
-                    itemsLen;
+                var state, linesArray, len, pointsArray, i, j, lines, points, items, itemsLen;
+                
+                state = gapi.hangout.data.getState();
                 
                 if (state.lines && state.points) {
                 
                     linesArray = state.lines.split('|');
                     len = linesArray.length;
                     pointsArray = state.points.split('|');
+                    lines = [];
+                    points = [];
                     
                     for (i = 0; i < len; i += 1) {
                         items = linesArray[i].split(',');
