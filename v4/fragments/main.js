@@ -94,6 +94,8 @@ window.requestAnimFrame = (function (callback) {
             this.brush.startPosition = false;
             this.brush.endPosition = false;
             
+            console.log('new stroke', this.data.lines);
+            
             //this.draw();
         },
         
@@ -195,8 +197,6 @@ window.requestAnimFrame = (function (callback) {
                 ctx.strokeStyle = this.options.colors.transparentBlue;
                 ctx.lineWidth = 1;
                 ctx.stroke();
-                
-                console.log(this.data);
             }
         },
         
@@ -231,8 +231,6 @@ window.requestAnimFrame = (function (callback) {
                     i,
                     linesStr = '',
                     pointsStr = '';
-                
-                console.log('RAW POINTS:', me.data.points);
                 
                 for (i = 0; i < linesLen; i += 1) {
                     if (i !== 0) {
