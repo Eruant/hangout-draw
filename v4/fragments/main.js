@@ -89,10 +89,12 @@ window.requestAnimFrame = (function (callback) {
                 // add [x, y, rotation, startingFrame]
                 this.data.points.push([this.brush.startPosition.x, this.brush.startPosition.y, 0, 0]);
             } else {
-                this.data.lines.push([this.brush.startPosition.x, this.brush.startPosition.y, this.brush.endPosition.x, this.brush.endPosition.y, 0]);
+                this.data.lines.push([this.brush.startPosition.x, this.brush.startPosition.y, this.brush.endPosition.x, this.brush.endPosition.y]);
             }
             this.brush.startPosition = false;
             this.brush.endPosition = false;
+            
+            console.log(this.data.points);
             
             //this.draw();
         },
