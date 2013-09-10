@@ -171,14 +171,13 @@ window.requestAnimFrame = (function (callback) {
             for (i = 0; i < linesLen; i += 1) {
                 item = this.data.lines[i];
                 this.drawArrow(item[0], item[1], item[2], item[3]);
-                
-                item = [];
             }
             
             ctx.strokeStyle = this.gradient;
             for (i = 0; i < pointsLen; i += 1) {
                 item = this.data.points[i];
                 this.drawPoint(item[0], item[1], item[2], item[3]);
+                
                 if (item[2] > 6.29) {
                     item[2] -= (Math.PI * 2);
                 }
@@ -186,8 +185,6 @@ window.requestAnimFrame = (function (callback) {
                 if (item[3] < 30) {
                     item[3] += 3;
                 }
-                
-                item = [];
             }
             
             if (this.brush.down) {
@@ -198,6 +195,8 @@ window.requestAnimFrame = (function (callback) {
                 ctx.strokeStyle = this.options.colors.transparentBlue;
                 ctx.lineWidth = 1;
                 ctx.stroke();
+                
+                console.log(this.data);
             }
         },
         
