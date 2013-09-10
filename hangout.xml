@@ -276,6 +276,8 @@ window.requestAnimFrame = (function (callback) {
                     linesStr = '',
                     pointsStr = '';
                 
+                console.log('RAW DATA:', lines);
+                
                 for (i = 0; i < linesLen; i += 1) {
                     if (i !== 0) {
                         linesStr += '|';
@@ -323,10 +325,6 @@ window.requestAnimFrame = (function (callback) {
                     lines: lines,
                     points: points
                 };
-                
-                console.log('DATA:', me.data.lines);
-                
-                //me.draw();
             });
             
         }
