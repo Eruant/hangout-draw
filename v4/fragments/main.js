@@ -310,7 +310,7 @@ window.requestAnimFrame = (function (callback) {
                         points: points
                     };
                     
-                    console.log('Data: ' + me.data);
+                    console.log('Data: ', me.data);
                     
                 }
             });
