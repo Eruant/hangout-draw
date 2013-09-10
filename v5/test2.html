@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<body>
+<iframe id="videoArea"></iframe>
+
+<script>
+/*globals window, gapi, YT*/
+(function (document) {
+    'use strict';
+    
+    var app = {
+        
+        init: function () {
+            var me = this,
+                firstScriptTag = document.getElementsByTagName('script')[0],
+                tag = document.createElement('script');
+            
+            // add the api to the page
+            tag.src = '//www.youtube.com/iframe_api';
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+            window.onYouTubeIframeAPIReady = function () {
+                me.player = new YT.Player('videoArea', {
+                	width: '600',
+                    height: '400',
+                    videoId: 'Il4swGfTOSM',
+                    events: {
+                        'onReady': function (ev) {
+                        	me.videoReady(ev);
+                        },
+                        'onStateChange': function (ev) {
+                        	me.videoStateChange(ev);
+                        }
+                    }
+                });
+            };
+        },
+        
+        videoReady: function (ev) {
+            //console.log('videoReady', ev);
+            //event.target.playVideo();
+        },
+        
+        videoStateChange: function (ev) {
+            //console.log('videoStateChange', ev);
+        }
+    };
+    
+    app.init();
+    
+}(window.document));
+</script>
+</body>
+</html>
