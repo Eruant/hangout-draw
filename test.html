@@ -118,7 +118,7 @@ window.requestAnimFrame = (function (callback) {
                 firstScriptTag = document.getElementsByTagName('script')[0],
                 tag = document.createElement('script'),
                 videoConfig = {
-                	width: this.options.width,
+                    width: this.options.width,
                     height: this.options.height,
                     videoID: 'Qig68IuPrbk',
                     events: {}
@@ -143,7 +143,7 @@ window.requestAnimFrame = (function (callback) {
         
         videoReady: function (ev) {
             console.log('videoReady', ev);
-            event.target.playVideo();
+            ev.target.playVideo();
         },
         
         videoStateChange: function (ev) {
