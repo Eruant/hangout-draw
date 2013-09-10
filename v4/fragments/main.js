@@ -260,9 +260,9 @@ window.requestAnimFrame = (function (callback) {
             // listen out for when the shared object changes
             gapi.hangout.data.onStateChanged.add(function () {
                 var state = gapi.hangout.data.getState(),
-                    linesArray = state.lines.split('|'),
-                    len = linesArray.length,
-                    pointsArray = state.points.split('|'),
+                    linesArray,
+                    len,
+                    pointsArray,
                     i,
                     j,
                     lines = [],
@@ -270,29 +270,37 @@ window.requestAnimFrame = (function (callback) {
                     items,
                     itemsLen;
                 
-                for (i = 0; i < len; i += 1) {
-                    items = linesArray[i].split(',');
-                    itemsLen = items.length;
-                    for (j = 0; j < itemsLen; j += 1) {
-                        items[i] = parseInt(items[i], 10);
-                    }
-                    lines.push(items);
-                }
+                if (state.lines && state.points) {
                 
-                len = pointsArray.length;
-                for (i = 0; i < len; i += 1) {
-                    items = pointsArray[i].split(',');
-                    itemsLen = items.length;
-                    for (j = 0; j < itemsLen; j += 1) {
-                        items[i] = parseInt(items[i], 10);
+                    linesArray = state.lines.split('|');
+                    len = linesArray.length;
+                    pointsArray = state.points.split('|');
+                    
+                    for (i = 0; i < len; i += 1) {
+                        items = linesArray[i].split(',');
+                        itemsLen = items.length;
+                        for (j = 0; j < itemsLen; j += 1) {
+                            items[i] = parseInt(items[i], 10);
+                        }
+                        lines.push(items);
                     }
-                    points.push(items);
+                    
+                    len = pointsArray.length;
+                    for (i = 0; i < len; i += 1) {
+                        items = pointsArray[i].split(',');
+                        itemsLen = items.length;
+                        for (j = 0; j < itemsLen; j += 1) {
+                            items[i] = parseInt(items[i], 10);
+                        }
+                        points.push(items);
+                    }
+                    
+                    me.data = {
+                        lines: lines,
+                        points: points
+                    };
+                    
                 }
-                
-                me.data = {
-                    lines: lines,
-                    points: points
-                };
             });
             
         }
