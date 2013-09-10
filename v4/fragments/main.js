@@ -270,6 +270,8 @@ window.requestAnimFrame = (function (callback) {
                     points: points
                 };
                 
+                console.log('DATA:', me.data);
+                
                 //me.draw();
             });
             
