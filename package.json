@@ -6,5 +6,5 @@
     "grunt-contrib-watch": "0.4.x",
     "grunt-contrib-concat": "0.3.x"
   },
-  "src": "v4/fragments"
+  "src": "v5/fragments"
 }

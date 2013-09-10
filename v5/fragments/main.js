@@ -1,4 +1,4 @@
-/*globals window, gapi*/
+/*globals window, gapi, YT*/
 
 /** Standard requestAnimFrame from paulirish.com, running 30 fps */
 window.requestAnimFrame = (function (callback) {
@@ -23,6 +23,7 @@ window.requestAnimFrame = (function (callback) {
          */
         options: {
             canvasID: 'drawArea',
+            videoID: 'videoArea',
             clearID: 'clear',
             sendID: 'send',
             width: 600,
@@ -70,8 +71,42 @@ window.requestAnimFrame = (function (callback) {
             this.gradient.addColorStop('0', this.options.colors.blue);
             this.gradient.addColorStop('1', this.options.colors.transparentBlue);
             
+            // load the video
+            this.setupVideo();
+            
             this.events();	// add event listeners
             this.loop();	// kicks off the animation loop
+        },
+        
+        setupVideo: function () {
+            var me = this,
+                firstScriptTag = document.getElementsByTagName('script')[0],
+                tag = document.createElement('script'),
+                videoEvents = {};
+            
+            // add the api to the page
+            tag.src = 'https://www.youtube.com/iframe_api';
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            
+            videoEvents.onReady = function (ev) {
+                me.videoReady(ev);
+            };
+            
+            videoEvents.onStateChange = function (ev) {
+                me.videoStateChange(ev);
+            };
+            
+            window.onYouTubeIframeAPIReady = function () {
+                me.player = new YT.Player(document.getElementById(me.options.videoID), videoEvents);
+            };
+        },
+        
+        videoReady: function (ev) {
+            console.log('videoReady', ev);
+        },
+        
+        videoStateChange: function (ev) {
+            console.log('videoStateChange', ev);
         },
         
         /**

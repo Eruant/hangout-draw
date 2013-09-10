@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+    <style>
+        body {
+        	text-align: center;
+        }
+    	canvas {
+        	border: solid 1px #333;
+            cursor: crosshair;
+        }
+        .holder {
+        	position: relative;
+            width: 600px;
+            height: 400px;
+        }
+        #videoArea {
+        	position: absolute;
+            z-index: 5;
+        }
+        #drawArea {
+            position: absolute;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+<script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
+<div class="holder">
+    <iframe id="videoArea"></iframe>
+	<canvas id="drawArea"></canvas>
+</div><br/>
+<button id="clear">Clear</button>
+<button id="send">Send</button>
+<script>

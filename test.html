@@ -14,7 +14,7 @@
             width: 600px;
             height: 400px;
         }
-        .holder .bg {
+        #videoArea {
         	position: absolute;
             z-index: 5;
         }
@@ -27,13 +27,13 @@
 <body>
 <script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>
 <div class="holder">
-    <img class="bg" src="http://static4.demotix.com/sites/default/files/imagecache/a_scale_large/500-3/photos/1295325875-serbia-beat-turkey-in-u20-ice-hockey-championship_559253.jpg" width="600" height="400" alt="random image">
+    <iframe id="videoArea"></iframe>
 	<canvas id="drawArea"></canvas>
 </div><br/>
 <button id="clear">Clear</button>
 <button id="send">Send</button>
 <script>
-/*globals window, gapi*/
+/*globals window, gapi, YT*/
 
 /** Standard requestAnimFrame from paulirish.com, running 30 fps */
 window.requestAnimFrame = (function (callback) {
@@ -58,6 +58,7 @@ window.requestAnimFrame = (function (callback) {
          */
         options: {
             canvasID: 'drawArea',
+            videoID: 'videoArea',
             clearID: 'clear',
             sendID: 'send',
             width: 600,
@@ -87,11 +88,6 @@ window.requestAnimFrame = (function (callback) {
         },
         
         /**
-         * {Boolean} busy tag is used to stop too many requests being made
-         */
-        busy: false,
-        
-        /**
          * @method init - kicks off the process
          */
         init: function () {
@@ -110,8 +106,42 @@ window.requestAnimFrame = (function (callback) {
             this.gradient.addColorStop('0', this.options.colors.blue);
             this.gradient.addColorStop('1', this.options.colors.transparentBlue);
             
+            // load the video
+            this.setupVideo();
+            
             this.events();	// add event listeners
             this.loop();	// kicks off the animation loop
+        },
+        
+        setupVideo: function () {
+            var me = this,
+                firstScriptTag = document.getElementsByTagName('script')[0],
+                tag = document.createElement('script'),
+                videoEvents = {};
+            
+            // add the api to the page
+            tag.src = 'https://www.youtube.com/iframe_api';
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            
+            videoEvents.onReady = function (ev) {
+                me.videoReady(ev);
+            };
+            
+            videoEvents.onStateChange = function (ev) {
+                me.videoStateChange(ev);
+            };
+            
+            window.onYouTubeIframeAPIReady = function () {
+                me.player = new YT.Player(document.getElementById(me.options.videoID), videoEvents);
+            };
+        },
+        
+        videoReady: function (ev) {
+            console.log('videoReady', ev);
+        },
+        
+        videoStateChange: function (ev) {
+            console.log('videoStateChange', ev);
         },
         
         /**
@@ -160,8 +190,6 @@ window.requestAnimFrame = (function (callback) {
                 yRange = this.brush.startPosition.y - this.brush.endPosition.y,
                 range = 5;
             
-            //if (!this.busy) {
-            
             if (xRange < range && xRange > -range && yRange < range && yRange > -range) {
                 // add [x, y, rotation, startingFrame]
                 this.data.points.push([this.brush.startPosition.x, this.brush.startPosition.y, 0, 0]);
@@ -172,13 +200,6 @@ window.requestAnimFrame = (function (callback) {
             this.brush.startPosition = false;
             this.brush.endPosition = false;
                 
-                /*this.busy = true;
-                
-                window.setTimeout(function () {
-                    me.busy = false;
-                }, 100);
-                
-            }*/
         },
         
         /**
