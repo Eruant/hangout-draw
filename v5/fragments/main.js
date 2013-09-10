@@ -352,12 +352,13 @@ window.requestAnimFrame = (function (callback) {
                     pointsStr += points[i].join(',');
                 }
                 
-                videoSeek = me.player.getCurrentTime();
+                videoSeek = String(me.player.getCurrentTime());
+                console.log('Sending', videoSeek);
                 
                 gapi.hangout.data.submitDelta({
                     lines: linesStr,
                     points: pointsStr,
-                    videoSeek: String(videoSeek)
+                    videoSeek: videoSeek
                 });
 
             }, false);
@@ -400,7 +401,10 @@ window.requestAnimFrame = (function (callback) {
                         points: points
                     };
                     
-                    me.videoSeek(parseInt(state.videoSeek, 10));
+                    if (state.videoSeek) {
+                        console.log('received', state.videoSeek, parseInt(state.videoSeek, 10));
+                        me.videoSeek(parseInt(state.videoSeek, 10));
+                    }
                     
                 }
             });
