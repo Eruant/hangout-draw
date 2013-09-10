@@ -137,7 +137,15 @@ window.requestAnimFrame = (function (callback) {
             };
 
             window.onYouTubeIframeAPIReady = function () {
-                me.player = new YT.Player(me.options.videoID, videoConfig);
+                me.player = new YT.Player('videoArea', {
+                	width: '600',
+                    height: '400',
+                    videoId: 'Qig68IuPrbk',
+                    events: {
+                        'onReady': me.videoReady,
+                        'onStateChange': me.videoStateChange
+                    }
+                });
             };
         },
         
