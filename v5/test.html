@@ -14,7 +14,7 @@
             width: 600px;
             height: 400px;
         }
-        .holder .bg {
+        #videoArea {
         	position: absolute;
             z-index: 5;
         }
@@ -25,13 +25,15 @@
     </style>
 </head>
 <body>
+<!--<script src="//plus.google.com/hangouts/_/api/v1/hangout.js"></script>-->
 <div class="holder">
-    <img class="bg" src="http://static4.demotix.com/sites/default/files/imagecache/a_scale_large/500-3/photos/1295325875-serbia-beat-turkey-in-u20-ice-hockey-championship_559253.jpg" width="600" height="400" alt="random image">
+    <iframe id="videoArea"></iframe>
 	<canvas id="drawArea"></canvas>
 </div><br/>
 <button id="clear">Clear</button>
 <button id="send">Send</button>
 <script>
+/*globals window, gapi, YT*/
 
 /** Standard requestAnimFrame from paulirish.com, running 30 fps */
 window.requestAnimFrame = (function (callback) {
@@ -41,24 +43,35 @@ window.requestAnimFrame = (function (callback) {
     };
 }());
 
-/*globals window, gapi*/
+
 (function (document) {
     'use strict';
     
     var app = {
         
+        /**
+         * @cfg {Object} options
+         * *ID		= id's for elements on page
+         * width	= width of canvas / player element
+         * height	= height of canvas /player element
+         * colors	= object of colours used in this project
+         */
         options: {
             canvasID: 'drawArea',
+            videoID: 'videoArea',
             clearID: 'clear',
             sendID: 'send',
             width: 600,
             height: 400,
             colors: {
-            	blue: 'rgb(51, 102, 255)',
+                blue: 'rgb(51, 102, 255)',
                 transparentBlue: 'rgba(51, 102, 255, 0.4)'
             }
         },
         
+        /**
+         * {Object} brush - used for tracking the mouse position, and when to draw icons
+         */
         brush: {
             startPosition: false,
             endPosition: false,
@@ -66,11 +79,17 @@ window.requestAnimFrame = (function (callback) {
             down: false
         },
         
+        /**
+         * {Object} data - stores the points added to the screen
+         */
         data: {
             lines: [],
             points: []
         },
         
+        /**
+         * @method init - kicks off the process
+         */
         init: function () {
             
             // set up the canvas
@@ -82,14 +101,59 @@ window.requestAnimFrame = (function (callback) {
             this.ctx = this.canvas.getContext('2d');
             this.ctx.translate(-5, -5);
             
+            // create a gradient effect for painting with later
             this.gradient = this.ctx.createLinearGradient(0, 0, 30, 0);
             this.gradient.addColorStop('0', this.options.colors.blue);
             this.gradient.addColorStop('1', this.options.colors.transparentBlue);
             
-            this.events();
-            this.loop();
+            // load the video
+            this.setupVideo();
+            
+            this.events();	// add event listeners
+            this.loop();	// kicks off the animation loop
         },
         
+        setupVideo: function () {
+            var me = this,
+                firstScriptTag = document.getElementsByTagName('script')[0],
+                tag = document.createElement('script'),
+                videoConfig = {
+                	width: this.options.width,
+                    height: this.options.height,
+                    videoID: 'Qig68IuPrbk',
+                    events: {}
+                };
+            
+            // add the api to the page
+            tag.src = 'https://www.youtube.com/iframe_api';
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+            videoConfig.events.onReady = function (ev) {
+                me.videoReady(ev);
+            };
+            
+            videoConfig.events.onStateChange = function (ev) {
+                me.videoStateChange(ev);
+            };
+
+            window.onYouTubeIframeAPIReady = function () {
+                me.player = new YT.Player(me.options.videoID, videoConfig);
+            };
+        },
+        
+        videoReady: function (ev) {
+            console.log('videoReady', ev);
+            event.target.playVideo();
+        },
+        
+        videoStateChange: function (ev) {
+            console.log('videoStateChange', ev);
+        },
+        
+        /**
+         * @method mousePosition - returns the mouse position relative to the top left of the canvas
+         * @returns {Object}
+         */
         mousePosition: function (ev) {
             return {
                 x: ev.clientX - this.canvas.offsetLeft,
@@ -97,12 +161,18 @@ window.requestAnimFrame = (function (callback) {
             };
         },
         
+        /**
+         * @medthod mouseDown - logs the starting position of the mouse and sets a painting flag
+         */
         mouseDown: function (ev) {
             this.brush.startPosition = this.mousePosition(ev);
             this.brush.down = true;
             ev.preventDefault();
         },
         
+        /**
+         * @method mouseUp - logs the end position of the mouse, removes the painting flag and requests a new drawing object
+         */
         mouseUp: function (ev) {
             this.brush.endPosition = this.mousePosition(ev);
             this.brush.down = false;
@@ -110,12 +180,19 @@ window.requestAnimFrame = (function (callback) {
             ev.preventDefault();
         },
         
+        /**
+         * @method mouseMove - sets the current position of the brush
+         */
         mouseMove: function (ev) {
             this.brush.currentPosition = this.mousePosition(ev);
-    	},
+        },
         
+        /**
+         * @method newStroke - adds either a point or line to the data object
+         */
         newStroke: function () {
-            var xRange = this.brush.startPosition.x - this.brush.endPosition.x,
+            var me = this,
+                xRange = this.brush.startPosition.x - this.brush.endPosition.x,
                 yRange = this.brush.startPosition.y - this.brush.endPosition.y,
                 range = 5;
             
@@ -123,14 +200,17 @@ window.requestAnimFrame = (function (callback) {
                 // add [x, y, rotation, startingFrame]
                 this.data.points.push([this.brush.startPosition.x, this.brush.startPosition.y, 0, 0]);
             } else {
-                this.data.lines.push([this.brush.startPosition.x, this.brush.startPosition.y, this.brush.endPosition.x, this.brush.endPosition.y, 0]);
+                this.data.lines.push([this.brush.startPosition.x, this.brush.startPosition.y, this.brush.endPosition.x, this.brush.endPosition.y]);
             }
+            
             this.brush.startPosition = false;
             this.brush.endPosition = false;
-            
-            //this.draw();
+                
         },
         
+        /**
+         * @method drawLine - paints a line on the canvas
+         */
         drawLine: function (startX, startY, endX, endY) {
             
             var ctx = this.ctx;
@@ -142,6 +222,9 @@ window.requestAnimFrame = (function (callback) {
             ctx.stroke();
         },
         
+        /**
+         * @method drawArrow - paints an arrow on the canvas
+         */
         drawArrow: function (startX, startY, endX, endY) {
             
             var ctx = this.ctx,
@@ -166,6 +249,9 @@ window.requestAnimFrame = (function (callback) {
             ctx.restore();
         },
         
+        /**
+         * @method drawPoint - paints a circle on the canvas
+         */
         drawPoint: function (x, y, rotation, frameNumber) {
             
             var ctx = this.ctx,
@@ -174,13 +260,18 @@ window.requestAnimFrame = (function (callback) {
             ctx.save();
             
             ctx.translate(x, y);
+            
+            // make the circle appear when first loaded
             if (frameNumber < 30) {
                 scale = frameNumber / 30;
-            	ctx.scale(scale, scale * 0.4);
+                ctx.scale(scale, scale * 0.4);
             } else {
-            	ctx.scale(1, 0.4);
+                ctx.scale(1, 0.4);
             }
+            
+            // adds the animation of the gradient
             ctx.rotate(rotation);
+            
             ctx.beginPath();
             ctx.arc(0, 0, 40, 0, Math.PI * 2, false);
             ctx.closePath();
@@ -188,9 +279,15 @@ window.requestAnimFrame = (function (callback) {
             ctx.restore();
         },
         
+        /**
+         * @method update - adds any logic needed before rendering each frame
+         */
         update: function () {
         },
         
+        /**
+         * @method draw - takes the data object and draws it to the canvas
+         */
         draw: function () {
             var ctx = this.ctx,
                 linesLen = this.data.lines.length,
@@ -211,12 +308,18 @@ window.requestAnimFrame = (function (callback) {
             for (i = 0; i < pointsLen; i += 1) {
                 item = this.data.points[i];
                 this.drawPoint(item[0], item[1], item[2], item[3]);
+                
+                if (item[2] > 6.29) {
+                    item[2] -= (Math.PI * 2);
+                }
                 item[2] += 3 * (Math.PI / 180);
-                item[3] += 3;
+                if (item[3] < 30) {
+                    item[3] += 3;
+                }
             }
             
             if (this.brush.down) {
-            	ctx.beginPath();
+                ctx.beginPath();
                 ctx.moveTo(this.brush.startPosition.x, this.brush.startPosition.y);
                 ctx.lineTo(this.brush.currentPosition.x, this.brush.currentPosition.y);
                 ctx.closePath();
@@ -226,12 +329,18 @@ window.requestAnimFrame = (function (callback) {
             }
         },
         
+        /**
+         * @method loop - calls itself when the browser is ready to update the screen
+         */
         loop: function () {
             this.update();
             this.draw();
             window.requestAnimationFrame(this.loop.bind(this));
         },
         
+        /**
+         * @method events - creates event listeners to trigger actions
+         */
         events: function () {
             
             var me = this;
@@ -248,9 +357,8 @@ window.requestAnimFrame = (function (callback) {
                 //me.draw();
             }, false);
             
-            /*
             document.getElementById(this.options.sendID).addEventListener('click', function () {
-                
+                /*
                 var lines = me.data.lines,
                     linesLen = lines.length,
                     points = me.data.points,
@@ -279,46 +387,63 @@ window.requestAnimFrame = (function (callback) {
                     lines: linesStr,
                     points: pointsStr
                 });
+                */
+
             }, false);
             
             // listen out for when the shared object changes
-            gapi.hangout.data.onStateChanged.add(function () {
-                var state = gapi.hangout.data.getState(),
-                    linesArray = state.lines.split('|'),
-                    len = linesArray.length,
-                    pointsArray = state.points.split('|'),
-                    i,
-                    lines = [],
+            /*gapi.hangout.data.onStateChanged.add(function () {
+                var state, linesArray, len, pointsArray, i, j, lines, points, items, itemsLen;
+                
+                state = gapi.hangout.data.getState();
+                
+                if (state.lines && state.points) {
+                
+                    linesArray = state.lines.split('|');
+                    len = linesArray.length;
+                    pointsArray = state.points.split('|');
+                    lines = [];
                     points = [];
-                
-                for (i = 0; i < len; i += 1) {
-                    lines.push(linesArray[i].split(','));
+                    
+                    for (i = 0; i < len; i += 1) {
+                        items = linesArray[i].split(',');
+                        itemsLen = items.length;
+                        for (j = 0; j < itemsLen; j += 1) {
+                            items[j] = parseInt(items[j], 10);
+                        }
+                        lines.push(items);
+                    }
+                    
+                    len = pointsArray.length;
+                    for (i = 0; i < len; i += 1) {
+                        items = pointsArray[i].split(',');
+                        itemsLen = items.length;
+                        for (j = 0; j < itemsLen; j += 1) {
+                            items[j] = parseInt(items[j], 10);
+                        }
+                        points.push(items);
+                    }
+                    
+                    me.data = {
+                        lines: lines,
+                        points: points
+                    };
+                    
                 }
-                
-                len = pointsArray.length;
-                for (i = 0; i < len; i += 1) {
-                    points.push(pointsArray[i].split(','));
-                }
-                
-                me.data = {
-                    lines: lines,
-                    points: points
-                };
-                
-                me.draw();
-            });
-            */
+            });*/
             
         }
         
     };
     
+    /**
+     * Kicks off the hangout when ready
+     */
     /*gapi.hangout.onApiReady.add(function (eventObj) {
         if (eventObj.isApiReady) {
-            app.init();
+            */app.init();/*
         }
     });*/
-    app.init();
     
     
 }(window.document));

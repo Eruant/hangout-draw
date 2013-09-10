@@ -82,27 +82,33 @@ window.requestAnimFrame = (function (callback) {
             var me = this,
                 firstScriptTag = document.getElementsByTagName('script')[0],
                 tag = document.createElement('script'),
-                videoEvents = {};
+                videoConfig = {
+                	width: this.options.width,
+                    height: this.options.height,
+                    videoID: 'Qig68IuPrbk',
+                    events: {}
+                };
             
             // add the api to the page
             tag.src = 'https://www.youtube.com/iframe_api';
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-            
-            videoEvents.onReady = function (ev) {
+
+            videoConfig.events.onReady = function (ev) {
                 me.videoReady(ev);
             };
             
-            videoEvents.onStateChange = function (ev) {
+            videoConfig.events.onStateChange = function (ev) {
                 me.videoStateChange(ev);
             };
-            
+
             window.onYouTubeIframeAPIReady = function () {
-                me.player = new YT.Player(document.getElementById(me.options.videoID), videoEvents);
+                me.player = new YT.Player(me.options.videoID, videoConfig);
             };
         },
         
         videoReady: function (ev) {
             console.log('videoReady', ev);
+            event.target.playVideo();
         },
         
         videoStateChange: function (ev) {
@@ -317,7 +323,7 @@ window.requestAnimFrame = (function (callback) {
             }, false);
             
             document.getElementById(this.options.sendID).addEventListener('click', function () {
-                
+
                 var lines = me.data.lines,
                     linesLen = lines.length,
                     points = me.data.points,
