@@ -120,12 +120,12 @@ window.requestAnimFrame = (function (callback) {
                 videoConfig = {
                 	width: this.options.width,
                     height: this.options.height,
-                    videoID: 'Qig68IuPrbk',
+                    videoId: 'Qig68IuPrbk',
                     events: {}
                 };
             
             // add the api to the page
-            tag.src = 'https://www.youtube.com/iframe_api';
+            tag.src = '//www.youtube.com/iframe_api';
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
             videoConfig.events.onReady = function (ev) {
@@ -142,12 +142,12 @@ window.requestAnimFrame = (function (callback) {
         },
         
         videoReady: function (ev) {
-            console.log('videoReady', ev);
-            event.target.playVideo();
+            //console.log('videoReady', ev);
+            //event.target.playVideo();
         },
         
         videoStateChange: function (ev) {
-            console.log('videoStateChange', ev);
+            //console.log('videoStateChange', ev);
         },
         
         /**
