@@ -72,6 +72,8 @@ window.requestAnimFrame = (function (callback) {
             points: []
         },
         
+        busy: false,
+        
         init: function () {
             
             // set up the canvas
@@ -116,22 +118,31 @@ window.requestAnimFrame = (function (callback) {
         },
         
         newStroke: function () {
-            var xRange = this.brush.startPosition.x - this.brush.endPosition.x,
+            var me = this,
+                xRange = this.brush.startPosition.x - this.brush.endPosition.x,
                 yRange = this.brush.startPosition.y - this.brush.endPosition.y,
                 range = 5;
             
-            if (xRange < range && xRange > -range && yRange < range && yRange > -range) {
-                // add [x, y, rotation, startingFrame]
-                this.data.points.push([this.brush.startPosition.x, this.brush.startPosition.y, 0, 0]);
-            } else {
-                this.data.lines.push([this.brush.startPosition.x, this.brush.startPosition.y, this.brush.endPosition.x, this.brush.endPosition.y]);
+            if (!this.busy) {
+            
+                if (xRange < range && xRange > -range && yRange < range && yRange > -range) {
+                    // add [x, y, rotation, startingFrame]
+                    this.data.points.push([this.brush.startPosition.x, this.brush.startPosition.y, 0, 0]);
+                } else {
+                    this.data.lines.push([this.brush.startPosition.x, this.brush.startPosition.y, this.brush.endPosition.x, this.brush.endPosition.y]);
+                }
+                console.log('new stroke', this.data.lines);
+                console.log('brush', this.brush.startPosition, this.brush.endPosition);
+                this.brush.startPosition = false;
+                this.brush.endPosition = false;
+                
+                this.busy = true;
+                
+                window.setTimeout(function () {
+                    me.busy = false;
+                }, 100);
+                
             }
-            console.log('new stroke', this.data.lines);
-            console.log('brush', this.brush.startPosition, this.brush.endPosition);
-            this.brush.startPosition = false;
-            this.brush.endPosition = false;
-            
-            
             
             //this.draw();
         },
