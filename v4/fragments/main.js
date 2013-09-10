@@ -94,8 +94,6 @@ window.requestAnimFrame = (function (callback) {
             this.brush.startPosition = false;
             this.brush.endPosition = false;
             
-            console.log(this.data.points);
-            
             //this.draw();
         },
         
@@ -235,7 +233,7 @@ window.requestAnimFrame = (function (callback) {
                     linesStr = '',
                     pointsStr = '';
                 
-                console.log('RAW DATA:', lines);
+                console.log('RAW POINTS:', me.data.points);
                 
                 for (i = 0; i < linesLen; i += 1) {
                     if (i !== 0) {
@@ -257,8 +255,7 @@ window.requestAnimFrame = (function (callback) {
                     lines: linesStr,
                     points: pointsStr
                 });
-                
-                console.log('SENT DATA:', linesStr);
+
             }, false);
             
             // listen out for when the shared object changes
@@ -268,16 +265,29 @@ window.requestAnimFrame = (function (callback) {
                     len = linesArray.length,
                     pointsArray = state.points.split('|'),
                     i,
+                    j,
                     lines = [],
-                    points = [];
+                    points = [],
+                    items,
+                    itemsLen;
                 
                 for (i = 0; i < len; i += 1) {
-                    lines.push(linesArray[i].split(','));
+                    items = linesArray[i].split(',');
+                    itemsLen = items.length;
+                    for (j = 0; j < itemsLen; j += 1) {
+                        items[i] = parseInt(items[i], 10);
+                    }
+                    lines.push(items);
                 }
                 
                 len = pointsArray.length;
                 for (i = 0; i < len; i += 1) {
-                    points.push(pointsArray[i].split(','));
+                    items = pointsArray[i].split(',');
+                    itemsLen = items.length;
+                    for (j = 0; j < itemsLen; j += 1) {
+                        items[i] = parseInt(items[i], 10);
+                    }
+                    points.push(items);
                 }
                 
                 me.data = {
