@@ -91,10 +91,12 @@ window.requestAnimFrame = (function (callback) {
             } else {
                 this.data.lines.push([this.brush.startPosition.x, this.brush.startPosition.y, this.brush.endPosition.x, this.brush.endPosition.y]);
             }
+            console.log('new stroke', this.data.lines);
+            console.log('brush', this.brush.startPosition, this.brush.endPosition);
             this.brush.startPosition = false;
             this.brush.endPosition = false;
             
-            console.log('new stroke', this.data.lines);
+            
             
             //this.draw();
         },
