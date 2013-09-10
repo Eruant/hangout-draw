@@ -400,6 +400,7 @@ window.requestAnimFrame = (function (callback) {
                         points: points
                     };
                     
+                    alert(state.videoSeek);
                     me.videoSeek(parseInt(state.videoSeek, 10));
                     
                 }
