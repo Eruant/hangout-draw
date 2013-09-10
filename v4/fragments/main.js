@@ -290,7 +290,7 @@ window.requestAnimFrame = (function (callback) {
                         items = linesArray[i].split(',');
                         itemsLen = items.length;
                         for (j = 0; j < itemsLen; j += 1) {
-                            items[i] = parseInt(items[i], 10);
+                            items[j] = parseInt(items[j], 10);
                         }
                         lines.push(items);
                     }
@@ -300,7 +300,7 @@ window.requestAnimFrame = (function (callback) {
                         items = pointsArray[i].split(',');
                         itemsLen = items.length;
                         for (j = 0; j < itemsLen; j += 1) {
-                            items[i] = parseInt(items[i], 10);
+                            items[j] = parseInt(items[j], 10);
                         }
                         points.push(items);
                     }
@@ -309,8 +309,6 @@ window.requestAnimFrame = (function (callback) {
                         lines: lines,
                         points: points
                     };
-                    
-                    console.log('Data ', me.data);
                     
                 }
             });
