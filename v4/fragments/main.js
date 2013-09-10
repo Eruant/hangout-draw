@@ -1,4 +1,5 @@
 /*globals window, gapi*/
+
 /** Standard requestAnimFrame from paulirish.com, running 30 fps */
 window.requestAnimFrame = (function (callback) {
     'use strict';
@@ -13,6 +14,13 @@ window.requestAnimFrame = (function (callback) {
     
     var app = {
         
+        /**
+         * @cfg {Object} options
+         * *ID		= id's for elements on page
+         * width	= width of canvas / player element
+         * height	= height of canvas /player element
+         * colors	= object of colours used in this project
+         */
         options: {
             canvasID: 'drawArea',
             clearID: 'clear',
@@ -25,6 +33,9 @@ window.requestAnimFrame = (function (callback) {
             }
         },
         
+        /**
+         * {Object} brush - used for tracking the mouse position, and when to draw icons
+         */
         brush: {
             startPosition: false,
             endPosition: false,
@@ -32,13 +43,22 @@ window.requestAnimFrame = (function (callback) {
             down: false
         },
         
+        /**
+         * {Object} data - stores the points added to the screen
+         */
         data: {
             lines: [],
             points: []
         },
         
+        /**
+         * {Boolean} busy tag is used to stop too many requests being made
+         */
         busy: false,
         
+        /**
+         * @method init - kicks off the process
+         */
         init: function () {
             
             // set up the canvas
@@ -50,14 +70,19 @@ window.requestAnimFrame = (function (callback) {
             this.ctx = this.canvas.getContext('2d');
             this.ctx.translate(-5, -5);
             
+            // create a gradient effect for painting with later
             this.gradient = this.ctx.createLinearGradient(0, 0, 30, 0);
             this.gradient.addColorStop('0', this.options.colors.blue);
             this.gradient.addColorStop('1', this.options.colors.transparentBlue);
             
-            this.events();
-            this.loop();
+            this.events();	// add event listeners
+            this.loop();	// kicks off the animation loop
         },
         
+        /**
+         * @method mousePosition - returns the mouse position relative to the top left of the canvas
+         * @returns {Object}
+         */
         mousePosition: function (ev) {
             return {
                 x: ev.clientX - this.canvas.offsetLeft,
@@ -65,12 +90,18 @@ window.requestAnimFrame = (function (callback) {
             };
         },
         
+        /**
+         * @medthod mouseDown - logs the starting position of the mouse and sets a painting flag
+         */
         mouseDown: function (ev) {
             this.brush.startPosition = this.mousePosition(ev);
             this.brush.down = true;
             ev.preventDefault();
         },
         
+        /**
+         * @method mouseUp - logs the end position of the mouse, removes the painting flag and requests a new drawing object
+         */
         mouseUp: function (ev) {
             this.brush.endPosition = this.mousePosition(ev);
             this.brush.down = false;
@@ -78,39 +109,46 @@ window.requestAnimFrame = (function (callback) {
             ev.preventDefault();
         },
         
+        /**
+         * @method mouseMove - sets the current position of the brush
+         */
         mouseMove: function (ev) {
             this.brush.currentPosition = this.mousePosition(ev);
         },
         
+        /**
+         * @method newStroke - adds either a point or line to the data object
+         */
         newStroke: function () {
             var me = this,
                 xRange = this.brush.startPosition.x - this.brush.endPosition.x,
                 yRange = this.brush.startPosition.y - this.brush.endPosition.y,
                 range = 5;
             
-            if (!this.busy) {
+            //if (!this.busy) {
             
-                if (xRange < range && xRange > -range && yRange < range && yRange > -range) {
-                    // add [x, y, rotation, startingFrame]
-                    this.data.points.push([this.brush.startPosition.x, this.brush.startPosition.y, 0, 0]);
-                } else {
-                    this.data.lines.push([this.brush.startPosition.x, this.brush.startPosition.y, this.brush.endPosition.x, this.brush.endPosition.y]);
-                }
-
-                this.brush.startPosition = false;
-                this.brush.endPosition = false;
+            if (xRange < range && xRange > -range && yRange < range && yRange > -range) {
+                // add [x, y, rotation, startingFrame]
+                this.data.points.push([this.brush.startPosition.x, this.brush.startPosition.y, 0, 0]);
+            } else {
+                this.data.lines.push([this.brush.startPosition.x, this.brush.startPosition.y, this.brush.endPosition.x, this.brush.endPosition.y]);
+            }
+            
+            this.brush.startPosition = false;
+            this.brush.endPosition = false;
                 
-                this.busy = true;
+                /*this.busy = true;
                 
                 window.setTimeout(function () {
                     me.busy = false;
                 }, 100);
                 
-            }
-            
-            //this.draw();
+            }*/
         },
         
+        /**
+         * @method drawLine - paints a line on the canvas
+         */
         drawLine: function (startX, startY, endX, endY) {
             
             var ctx = this.ctx;
@@ -122,6 +160,9 @@ window.requestAnimFrame = (function (callback) {
             ctx.stroke();
         },
         
+        /**
+         * @method drawArrow - paints an arrow on the canvas
+         */
         drawArrow: function (startX, startY, endX, endY) {
             
             var ctx = this.ctx,
@@ -146,6 +187,9 @@ window.requestAnimFrame = (function (callback) {
             ctx.restore();
         },
         
+        /**
+         * @method drawPoint - paints a circle on the canvas
+         */
         drawPoint: function (x, y, rotation, frameNumber) {
             
             var ctx = this.ctx,
@@ -154,13 +198,18 @@ window.requestAnimFrame = (function (callback) {
             ctx.save();
             
             ctx.translate(x, y);
+            
+            // make the circle appear when first loaded
             if (frameNumber < 30) {
                 scale = frameNumber / 30;
                 ctx.scale(scale, scale * 0.4);
             } else {
                 ctx.scale(1, 0.4);
             }
+            
+            // adds the animation of the gradient
             ctx.rotate(rotation);
+            
             ctx.beginPath();
             ctx.arc(0, 0, 40, 0, Math.PI * 2, false);
             ctx.closePath();
@@ -168,9 +217,15 @@ window.requestAnimFrame = (function (callback) {
             ctx.restore();
         },
         
+        /**
+         * @method update - adds any logic needed before rendering each frame
+         */
         update: function () {
         },
         
+        /**
+         * @method draw - takes the data object and draws it to the canvas
+         */
         draw: function () {
             var ctx = this.ctx,
                 linesLen = this.data.lines.length,
@@ -212,12 +267,18 @@ window.requestAnimFrame = (function (callback) {
             }
         },
         
+        /**
+         * @method loop - calls itself when the browser is ready to update the screen
+         */
         loop: function () {
             this.update();
             this.draw();
             window.requestAnimationFrame(this.loop.bind(this));
         },
         
+        /**
+         * @method events - creates event listeners to trigger actions
+         */
         events: function () {
             
             var me = this;
@@ -312,12 +373,14 @@ window.requestAnimFrame = (function (callback) {
         
     };
     
+    /**
+     * Kicks off the hangout when ready
+     */
     gapi.hangout.onApiReady.add(function (eventObj) {
         if (eventObj.isApiReady) {
             app.init();
         }
     });
-    app.init();
     
     
 }(window.document));
